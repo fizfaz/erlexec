@@ -4,7 +4,10 @@
 {CXX,Target,Sysroot} =
     case os:getenv("CXX") of
     false    ->
-        {"g++",erlang:system_info(system_architecture),""};
+        case string:str(erlang:system_info(system_architecture), "openbsd") of 
+            0 -> {"g++",erlang:system_info(system_architecture),""};
+            _ -> {"clang", erlang:system_info(system_architecture), ""}
+        end;
     Compiler ->
         {Compiler,string:strip(os:cmd(Compiler ++ " -dumpmachine"),   right, $\n),
                   string:strip(os:cmd(Compiler ++ " -print-sysroot"), right, $\n)}
@@ -60,6 +63,10 @@ maps:to_list(lists:foldl(
 
                      {"freebsd",   "CXXFLAGS", "$CXXFLAGS -std=c++11 -DHAVE_SETRESUID" ++ X64},
                      {"freebsd",   "LDFLAGS",  "$LDFLAGS" ++ X64},
+
+                     {"openbsd",   "CXXFLAGS", "$CXXFLAGS -std=c++11 -DHAVE_SETRESUID" ++ X64},
+                     {"openbsd",   "LDFLAGS",  "$LDFLAGS" ++ X64},
+
 
                      {"dragonfly",   "CXXFLAGS", "$CXXFLAGS -std=c++11 -DHAVE_SETRESUID" ++ X64},
                      {"dragonfly",   "LDFLAGS",  "$LDFLAGS" ++ X64},
