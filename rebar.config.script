@@ -6,7 +6,7 @@
     false    ->
         case string:str(erlang:system_info(system_architecture), "openbsd") of 
             0 -> {"g++",erlang:system_info(system_architecture),""};
-            _ -> {"clang", erlang:system_info(system_architecture), ""}
+            _ -> {"clang++", erlang:system_info(system_architecture), ""}
         end;
     Compiler ->
         {Compiler,string:strip(os:cmd(Compiler ++ " -dumpmachine"),   right, $\n),
